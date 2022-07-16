@@ -1,0 +1,26 @@
+#fileName=${class.name}.java
+package com.example.dao.entity;
+
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
+#foreach($imp in $imports)
+import $imp;
+#end
+
+/**
+* $class.comment
+*/
+@ToString
+@Getter
+@Setter
+@ApiModel("$class.comment")
+public class ${class.name} {
+#foreach($field in $fields)
+    @ApiModelProperty(value = "${field.comment}")
+    private ${field.type} ${field.name};
+#end
+}

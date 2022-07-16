@@ -1,0 +1,80 @@
+#fileName=${class.name}MapperExt.xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.dao.mapper.ext.${class.name}MapperExt">
+    <resultMap id="BaseResultMap" type="com.example.service.dto.resp.${class.name}RespDTO" extends="com.example.dao.mapper.${class.name}Mapper.BaseResultMap">
+    </resultMap>
+    <sql id="Base_Column_List">
+        <include refid="com.example.dao.mapper.${class.name}Mapper.Base_Column_List" />
+    </sql>
+    <select id="selectCount" parameterType="com.facebook.common.service.dto.request.PageReqDTO" resultType="java.lang.Long">
+        select
+        count(*)
+        from ${table.name}
+        <where>
+            <include refid="where" />
+        </where>
+    </select>
+    <select id="selectList" parameterType="com.facebook.common.service.dto.request.PageReqDTO" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from ${table.name}
+        <where>
+            <include refid="where" />
+        </where>
+        limit #{offset,jdbcType=INTEGER}, #{pageSize,jdbcType=INTEGER}
+    </select>
+
+    <sql id="where">
+#foreach($field in $fields)
+#if(${foreach.index} > 0 && $field.colName != 'created_at' && $field.colName != 'updated_at')
+#if($field.jdbcType == 'VARCHAR')
+        <if test="params.${field.name} != null and params.${field.name} != ''">
+            and ${field.colName} = #{params.${field.name},jdbcType=${field.jdbcType}}
+        </if>
+#else
+        <if test="params.${field.name} != null">
+            and ${field.colName} = #{params.${field.name},jdbcType=${field.jdbcType}}
+        </if>
+#end
+#end
+#end
+    </sql>
+
+
+    <resultMap id="ManageResultMap" type="com.example.service.dto.resp.${class.name}RespDTO" extends="BaseResultMap">
+    </resultMap>
+    <select id="selectCountManage" parameterType="com.facebook.common.service.dto.request.PageReqDTO" resultType="java.lang.Long">
+        select
+        count(*)
+        from ${table.name}
+        <where>
+            <include refid="whereManage" />
+        </where>
+    </select>
+    <select id="selectListManage" parameterType="com.facebook.common.service.dto.request.PageReqDTO" resultMap="ManageResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from ${table.name}
+        <where>
+            <include refid="whereManage" />
+        </where>
+        limit #{offset,jdbcType=INTEGER}, #{pageSize,jdbcType=INTEGER}
+    </select>
+
+    <sql id="whereManage">
+        <if test="params.tenantId != null">
+            and tenant_id = #{params.tenantId,jdbcType=BIGINT}
+        </if>
+    </sql>
+
+    <insert id="batchInsert" parameterType="list">
+        insert into ${table.name} (#foreach($field in $fields)${field.colName}#if(${foreach.index} < ${fields.size()} - 1),
+        #end#end)
+        VALUES
+        <foreach collection="list" separator="," item="item">
+            (#foreach($field in $fields)#{item.${field.name},jdbcType=${field.jdbcType}}#if(${foreach.index} < ${fields.size()} - 1),
+        #end#end)
+        </foreach>
+    </insert>
+</mapper>

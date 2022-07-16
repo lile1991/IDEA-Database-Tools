@@ -1,0 +1,14 @@
+#fileName=${class.name}Mapper.java
+package com.example.dao.mapper;
+
+import com.facebook.common.dao.MapperExt;
+import com.example.dao.entity.${class.name};
+import com.example.service.dto.req.${class.name}ReqDTO;
+import com.example.service.dto.resp.${class.name}RespDTO;
+
+#foreach($imp in $imports)
+import $imp;
+#end
+
+public interface ${class.name}Mapper extends MapperExt<${class.name}, ${fields[0].type}, ${class.name}ReqDTO, ${class.name}RespDTO> {
+}

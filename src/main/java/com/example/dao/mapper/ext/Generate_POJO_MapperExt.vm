@@ -1,0 +1,17 @@
+#fileName=${class.name}MapperExt.java
+package com.example.dao.mapper.ext;
+
+import com.facebook.common.service.dto.request.PageReqDTO;
+import com.example.dao.mapper.${class.name}Mapper;
+import com.example.service.dto.req.${class.name}ReqDTO;
+import com.example.service.dto.resp.${class.name}RespDTO;
+
+#foreach($imp in $imports)
+import $imp;
+#end
+import java.util.List;
+
+public interface ${class.name}MapperExt extends ${class.name}Mapper {
+    Long selectCountManage(PageReqDTO<${class.name}ReqDTO> pageReqDTO);
+    List<${class.name}RespDTO> selectListManage(PageReqDTO<${class.name}ReqDTO> pageReqDTO);
+}

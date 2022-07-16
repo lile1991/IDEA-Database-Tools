@@ -1,0 +1,89 @@
+#fileName=${class.name}Mapper.xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.dao.mapper.${class.name}Mapper">
+    <resultMap id="BaseResultMap" type="com.example.dao.entity.${class.name}">
+#foreach($field in $fields)
+#if($foreach.index == 0)
+        <id column="${field.colName}" jdbcType="${field.jdbcType}" property="${field.name}" />
+#else
+        <result column="${field.colName}" jdbcType="${field.jdbcType}" property="${field.name}" />
+#end
+#end
+    </resultMap>
+    <sql id="Base_Column_List">
+#foreach($field in $fields)
+        ${field.colName}#if(${foreach.index} < ${fields.size()} - 1),
+#end
+#end
+
+    </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.$fields[0].type" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from ${table.name}
+        where $fields[0].colName = #{$fields[0].name,jdbcType=$fields[0].jdbcType}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.$fields[0].type">
+        delete from ${table.name}
+        where $fields[0].colName = #{$fields[0].name,jdbcType=$fields[0].jdbcType}
+    </delete>
+    <insert id="insert" parameterType="com.example.dao.entity.${class.name}">
+        insert into ${table.name} (
+#foreach($field in $fields)
+            ${field.colName}#if(${foreach.index} < ${fields.size()} - 1),
+#end
+#end
+
+        )
+        values (
+#foreach($field in $fields)
+            #{${field.name},jdbcType=${field.jdbcType}}#if(${foreach.index} < ${fields.size()} - 1),
+#end
+#end
+
+        )
+    </insert>
+    <insert id="insertSelective" parameterType="com.example.dao.entity.${class.name}">
+        insert into ${table.name}
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+#foreach($field in $fields)
+            <if test="${field.name} != null">
+                ${field.colName},
+            </if>
+#end
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+#foreach($field in $fields)
+            <if test="${field.name} != null">
+                #{${field.name},jdbcType=${field.jdbcType}},
+            </if>
+#end
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.example.dao.entity.${class.name}">
+        update ${table.name}
+        <set>
+#foreach($field in $fields)
+#if(${foreach.index} > 0)
+            <if test="${field.name} != null">
+                ${field.colName} = #{${field.name},jdbcType=${field.jdbcType}},
+            </if>
+#end
+#end
+        </set>
+        where ${fields[0].colName} = #{${fields[0].name},jdbcType=${fields[0].jdbcType}}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.example.dao.entity.${class.name}">
+        update ${table.name}
+        set
+#foreach($field in $fields)
+#if(${foreach.index} > 0)
+            ${field.colName} = #{${field.name},jdbcType=${field.jdbcType}}#if(${foreach.index} < ${fields.size()} - 1),
+#end
+#end
+#end
+
+        where ${fields[0].colName} = #{${fields[0].name},jdbcType=${fields[0].jdbcType}}
+    </update>
+</mapper>

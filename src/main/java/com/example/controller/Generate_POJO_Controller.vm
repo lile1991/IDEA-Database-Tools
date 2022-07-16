@@ -1,0 +1,38 @@
+#fileName=${class.name}Controller.java
+package com.example.controller;
+
+import com.facebook.common.controller.vo.ResultVO;
+import com.facebook.common.service.dto.request.PageReqDTO;
+import com.facebook.common.service.dto.response.PageRespDTO;
+
+import com.woo.erp.service.dto.HWSessionDTO;
+import com.example.service.dto.req.${class.name}ReqDTO;
+import com.example.service.dto.resp.${class.name}RespDTO;
+import com.example.service.${class.name}Service;
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+@Api(tags = "Product-${class.comment}")
+@Slf4j
+@RestController
+@RequestMapping("${memberName}")
+public class ${class.name}Controller {
+
+    @Autowired
+    private ${class.name}Service ${memberName}Service;
+
+    @ApiOperation("分页查询")
+    @PostMapping("findPageManage")
+    public ResultVO<PageRespDTO<${class.name}RespDTO>> findPageManage(@RequestBody PageReqDTO<${class.name}ReqDTO> pageReqDTO) {
+        HWSessionDTO sessionDTO = (HWSessionDTO) SecurityUtils.getSubject().getPrincipal();
+        pageReqDTO.getParams().setTenantId(sessionDTO.getTenantId());
+        PageRespDTO<${class.name}RespDTO> pageRespDTO = ${memberName}Service.selectPageManage(pageReqDTO);
+        return ResultVO.success(pageRespDTO).setMsg("查询成功");
+    }
+}
