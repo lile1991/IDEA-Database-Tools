@@ -23,6 +23,7 @@ import org.apache.velocity.runtime.RuntimeConstants
  */
 
 typeMapping = [
+        (~/(?i)bit/)                   : "Boolean",
         (~/(?i)bigint/)                   : "Long",
         (~/(?i)tinyint/)                  : "Byte",
         (~/(?i)int/)                      : "Integer",
@@ -164,8 +165,8 @@ def calcFields(table) {
 
         def jdbcType = Case.UPPER.apply(col.getDataType().typeName)
 
-        if(typeStr == "Byte" && col.getDataType().size == 1) {
-            // 一个长度的tinyint, 用Boolean类型
+        if(jdbcType == "TINYINT" && col.getDataType().size == 1) {
+            // 一个长度的TINYINT, 用Boolean类型
             typeStr = "Boolean"
             jdbcType = "BIT"
         }
