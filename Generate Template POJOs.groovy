@@ -163,12 +163,21 @@ def calcFields(table) {
         }
 
         def jdbcType = Case.UPPER.apply(col.getDataType().typeName)
+
+        if(typeStr == "Byte" && col.getDataType().size == 1) {
+            // 一个长度的tinyint, 用Boolean类型
+            typeStr = "Boolean"
+            jdbcType = "BIT"
+        }
+
         fields += [[
                            name   : javaName(col.getName(), false),
                            type   : typeStr,
                            colName: col.getName(),
 //                           jdbcType: Case.LOWER.apply(col.getDataType().getSpecification()),
                            jdbcType: jdbcType == "INT" ? "INTEGER" : jdbcType,
+                           sizeUnit: col.getDataType().sizeUnit,
+                           size: col.getDataType().size,
                            comment: col.comment,
                            annos  : ""]]
 
