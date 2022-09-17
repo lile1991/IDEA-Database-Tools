@@ -137,11 +137,11 @@ def setContextProperty(ctx, table, className, dir) {
 
     // 将类信息放入模板变量
     ctx.put("class", [
-            "name"   : className,   // 类名
+            "name"   : className,   // 类名， 首字母大写
+            "member"   : memberName,   // 类名, 首字母小写
             "comment": table.comment    // 表注释
     ])
 
-    ctx.put("memberName", memberName)
     ctx.put("table", [
             "name": table.getName()
     ])

@@ -21,18 +21,18 @@ import org.springframework.web.bind.annotation.*;
 @Api(tags = "Product-${class.comment}")
 @Slf4j
 @RestController
-@RequestMapping("${memberName}")
+@RequestMapping("${class.member}")
 public class ${class.name}Controller {
 
     @Autowired
-    private ${class.name}Service ${memberName}Service;
+    private ${class.name}Service ${class.member}Service;
 
     @ApiOperation("分页查询")
     @PostMapping("findPageManage")
     public ResultVO<PageRespDTO<${class.name}RespDTO>> findPageManage(@RequestBody PageReqDTO<${class.name}ReqDTO> pageReqDTO) {
         HWSessionDTO sessionDTO = (HWSessionDTO) SecurityUtils.getSubject().getPrincipal();
         pageReqDTO.getParams().setTenantId(sessionDTO.getTenantId());
-        PageRespDTO<${class.name}RespDTO> pageRespDTO = ${memberName}Service.selectPageManage(pageReqDTO);
+        PageRespDTO<${class.name}RespDTO> pageRespDTO = ${class.member}Service.selectPageManage(pageReqDTO);
         return ResultVO.success(pageRespDTO).setMsg("查询成功");
     }
 }
