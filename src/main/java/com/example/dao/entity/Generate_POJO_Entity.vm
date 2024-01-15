@@ -1,12 +1,11 @@
 #fileName=${class.name}.java
-package com.example.dao.entity;
+package com.wutong.member.dao.entity;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import com.baomidou.mybatisplus.annotation.*;
+import com.baomidou.mybatisplus.extension.activerecord.Model;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-
 #foreach($imp in $imports)
 import $imp;
 #end
@@ -17,10 +16,19 @@ import $imp;
 @ToString
 @Getter
 @Setter
-@ApiModel("$class.comment")
-public class ${class.name} {
+@TableName("$table.name")
+public class ${class.name} extends Model<${class.name}> {
 #foreach($field in $fields)
-    @ApiModelProperty(value = "${field.comment}")
+    /** ${field.comment} */
+#if($foreach.index == 0)
+    @TableId(value = "${field.colName}", type = IdType.INPUT)
+#elseif(${field.name} == 'createTime' || ${field.name} == 'creator')
+    @TableField(value = "${field.colName}", fill = FieldFill.INSERT)
+#elseif(${field.name} == 'updateTime' || ${field.name} == 'updater')
+    @TableField(value = "${field.colName}", fill = FieldFill.INSERT_UPDATE)
+#else
+    @TableField(value = "${field.colName}")
+#end
     private ${field.type} ${field.name};
 #end
 }

@@ -1,0 +1,25 @@
+
+#fileName=${class.name}DTO.java
+package leli.juhe.service.dto;
+
+import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+#foreach($imp in $imports)
+import $imp;
+#end
+
+/**
+* $class.comment
+*/
+@ToString
+@Getter
+@Setter
+@Schema(description = "$class.comment")
+public class ${class.name}DTO {
+#foreach($field in $fields)
+    @Schema(description = "${field.comment}")
+    private ${field.type} ${field.name};
+#end
+}
