@@ -122,7 +122,7 @@ def generate(table, dir) {
                 isDefinedReading = false
             }
             // 再读取正文
-            sw.append(line)
+            sw.append(line).append("\n")
         }
 
 //        new File(new File("D:\\"), fileName).append(fileName)
